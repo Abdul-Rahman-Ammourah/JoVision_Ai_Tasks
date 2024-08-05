@@ -5,7 +5,10 @@ from Functions.GUIrequest import open_image_file
 
 def Detect_Finger_Pressure(image_path):
     # Load and process the image
-    image = Image.open(image_path)
+    try:
+        image = Image.open(image_path)
+    except Exception as e:
+        print("Error while opening image: ",e)    
 
     if image.mode != "RGB":
         image = image.convert("RGB")
@@ -15,7 +18,6 @@ def Detect_Finger_Pressure(image_path):
 
     # Green color for pressure detected 
     green_color = np.array([0, 255, 0])  
-    
     # Create the bottom region of the image
     bottom_region = img_array[-1, :, :] 
 
@@ -23,22 +25,36 @@ def Detect_Finger_Pressure(image_path):
     if np.mean(bottom_region == green_color) > 0.5:
         
         # Get the dimensions of the image
-        height, width, _ = img_array.shape
-        # Define the finger regions
-        finger_regions = [
-            (0, pressure_data.shape[1] // 5),
-            (pressure_data.shape[1] // 5, 2 * pressure_data.shape[1] // 5),
-            (2 * pressure_data.shape[1] // 5, 3 * pressure_data.shape[1] // 5),
-            (3 * pressure_data.shape[1] // 5, 4 * pressure_data.shape[1] // 5),
-            (4 * pressure_data.shape[1] // 5, pressure_data.shape[1])
-        ]
-
-        # Define the region where pressure data is located (right half of the image)
-        pressure_data = img_array[:, width // 2:, :]
-        finger_pressure = []
+        width, height = image.size
         
-            
+        img_data_porttion = image.crop((width//2, 0, width, height))
+        # Crop (left, top, right, bottom)
+        fingers = [img_data_porttion.crop((0, 0, width//2, height//10)),
+                   img_data_porttion.crop((0,height//5.5,width//2,height//3.6)),
+                   img_data_porttion.crop((0,height//3.3,width//2,height//2.5)),
+                   img_data_porttion.crop((0,height//2.2,width//2,height//1.8)),
+                   img_data_porttion.crop((0,height//1.8,width//2,height//1.03))]
+        
+        pressure = []
+        
+        for finger in fingers:
+            pixels = finger.load()
+            height, width = finger.size
+            arr_mean = []
+            for x in range(height):
+                for y in range(width):
+                    r,g,b = pixels[x,y]
+                    if r >= 10 and g >= 125 and b >= 240:
+                        arr_mean.append(1)
+                    else:
+                        arr_mean.append(0)
+            finger_pressure = round(float(np.mean(arr_mean)),4)
+            if finger_pressure >= 0.004:
+                pressure.append(1)
+            else:
+                pressure.append(0)
 
+        return pressure
     else:
         return [0] * 5
     
