@@ -1,10 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
 def open_image_file():
-    # Create a Tkinter Window
-    root = tk.Tk()
-    root.withdraw() 
-
     # Open file dialog
     file_path = filedialog.askopenfilename(
         title="Select an Image File",
