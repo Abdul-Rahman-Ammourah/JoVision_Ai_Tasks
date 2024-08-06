@@ -12,7 +12,7 @@ def Detect_Finger_Pressure(image_path):
 
     if image.mode != "RGB":
         image = image.convert("RGB")
-
+        
     # Convert the image to a NumPy array
     img_array = np.array(image)
 
@@ -48,6 +48,7 @@ def Detect_Finger_Pressure(image_path):
                         arr_mean.append(1)
                     else:
                         arr_mean.append(0)
+            
             finger_pressure = round(float(np.mean(arr_mean)),4)
             if finger_pressure >= 0.004:
                 pressure.append(1)
