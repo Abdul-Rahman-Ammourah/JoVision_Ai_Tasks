@@ -12,17 +12,15 @@ def Detect_Finger_Pressure(image_path):
 
     if image.mode != "RGB":
         image = image.convert("RGB")
-        
-    # Convert the image to a NumPy array
-    img_array = np.array(image)
-
-    # Green color for pressure detected 
-    green_color = np.array([0, 255, 0])  
-    # Create the bottom region of the image
-    bottom_region = img_array[-1, :, :] 
-
+    
+    # Get the dimensions of the image
+    width, height = image.size
+    # Get the bottom region of the image
+    bottom_region = image.crop((0,height//1.03,width,height))
+    pixels = bottom_region.load()
+    r,g,b = pixels[250,4]
     # Check if the green color is detected in the bottom region
-    if np.mean(bottom_region == green_color) > 0.5:
+    if r <= 10 and g >= 250 and b <= 10:
         
         # Get the dimensions of the image
         width, height = image.size
@@ -57,6 +55,7 @@ def Detect_Finger_Pressure(image_path):
 
         return pressure
     else:
+        print("Green color not detected in the bottom region")
         return [0] * 5
     
 def Save_To_Excel(data, file_name='finger_pressure_data'):
