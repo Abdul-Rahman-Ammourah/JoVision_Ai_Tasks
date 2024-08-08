@@ -26,6 +26,7 @@ def Detect_Finger_Pressure(image_path):
         width, height = image.size
         
         img_data_porttion = image.crop((width//2, 0, width, height))
+        img_data_porttion.show()
         # Crop (left, top, right, bottom)
         fingers = [img_data_porttion.crop((0, 0, width//2, height//10)),
                    img_data_porttion.crop((0,height//5.5,width//2,height//3.6)),
