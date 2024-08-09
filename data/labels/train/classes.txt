@@ -1,0 +1,6 @@
+Bishop
+King
+Pawn
+Queen
+Rook
+Knight
