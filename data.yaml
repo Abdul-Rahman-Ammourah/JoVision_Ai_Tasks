@@ -1,12 +1,11 @@
 train: C:\Users\welle\Desktop\College\Projects\JoVision_Ai_Tasks/data/images/train
 val: C:\Users\welle\Desktop\College\Projects\JoVision_Ai_Tasks/data/images/val
 
-nc: 6  # Update this to the number of classes you have
-names: [
-  'Bishop',
-  'King',
-  'Pawn',
-  'Queen',
-  'Rook',
-  'Knight'
-]
+nc: 6
+names:
+  0: 'pawn'
+  1: 'knight'
+  2: 'bishop'
+  3: 'rook'
+  4: 'queen'
+  5: 'king'
